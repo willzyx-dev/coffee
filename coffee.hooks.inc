@@ -8,7 +8,7 @@
 /**
  * The default implementation of Coffee.
  * It will look in the menu_links table for administrative links based on
- * the user input.
+ * the user input
  *
  * @param string $input
  *   The user input that will be used to query the database.
@@ -23,56 +23,56 @@ function coffee_redirect($input) {
     $input = implode('/', $argument_query);
   }
 
-  $input = '%' . check_plain($input) . '%';
+  // Add the % for the LIKE query.
+  $input = '%' . $input . '%';
 
   // Build the query for the result set.
   // Look up items in the menu_links table.
   // Limit the result set to 7.
-  $query = db_select('menu_links', 'ml');
 
   // Join menu_router table, for the menu link description.
-  $query->innerJoin('menu_router', 'mr', 'ml.link_path = mr.path');
-
-  $query->fields('ml', array('link_path', 'link_title'));
-
-  // Look for management links and devel (if it is installed). 
-  $query->condition('ml.menu_name', array('management', 'devel'))
-  ->condition(
-  db_or()
-    ->condition('ml.link_path', $input, 'LIKE')
-    ->condition('ml.link_title', $input, 'LIKE')
-    ->condition('mr.description', $input, 'LIKE')
-  )
   // Exclude % in link_path.
-  ->condition('ml.link_path', '%\%%', 'NOT LIKE')
-
   // Exclude 'help' in link_path.
-  ->condition('ml.link_path', '%help%', 'NOT LIKE')
-
   // Filter out empty link_title.
-  ->condition('ml.link_title', '%%', '<>')
-
-  // Add default ordering.
-  ->orderBy('ml.link_title', 'ASC');
 
   // Execute the query above.
-  $result = $query->execute();
+  $query = "SELECT
+  					  path, title
+  					FROM
+  					  {menu_router} mr
+  					WHERE
+  					  (
+  					   mr.path LIKE '%s' OR
+  					   mr.title LIKE '%s'
+  					  )
+  					  AND mr.title <> '%%'
+  					  AND mr.path NOT LIKE '%help%'
+  					  AND mr.path NOT LIKE '%\%%'
+  					  ORDER BY mr.path ASC
+  					  LIMIT 0, 75
+  					";
+  $args = array('admin/' . $input, 'admin/' . $input);
+  $query = db_query($query, $args);
 
-  if (is_object($result)) {
+  while ($result = db_fetch_object($query)) {
+    $results[] = $result;
+  }
+
+  if (is_array($results)) {
     $return = array();
-    foreach ($result as $record) {
+    foreach ($results as $record) {
 
       // Load the menu item and check if the user has persmission.
-      $item = menu_get_item($record->link_path);
+      $item = menu_get_item($record->path);
 
       // Only add items to the return array if the user has access.
       if ($item['access']) {
         $match = array(
-          'path' => $record->link_path,
-          'title' => $record->link_title,
+          'path' => $record->path,
+          'title' => $record->title,
         );
         // Make this the top item if the title is an exact match.
-        if (drupal_strtolower(trim($record->link_title)) == drupal_strtolower(trim($input, '% '))) {
+        if (drupal_strtolower(trim($record->title)) == drupal_strtolower(trim($input, '% '))) {
           array_unshift($return, $match);
         }
         else {
@@ -90,6 +90,7 @@ function coffee_redirect($input) {
     $number_of_items = variable_get('coffee_number_of_results', 7);
     $return = array_slice($return, 0, $number_of_items);
   }
+
   return $return;
 
 }
@@ -97,16 +98,8 @@ function coffee_redirect($input) {
 /**
  * Implements hook_coffee_command().
  */
-function coffee_coffee_command($op) {
+function coffee_coffee_command($op, $args) {
   switch ($op) {
-
-    // Example usage of how a result array should be formatted.
-    case 'help' :
-      $return['help'] = array(
-        'path' => 'admin/help/coffee',
-        'title' => 'Coffee Help',
-      );
-      break;
 
     // Display the links of the node/add page.
     case 'add' :
@@ -117,11 +110,13 @@ function coffee_coffee_command($op) {
 
       $return = array();
       foreach ($content_types as $content_type) {
-        $return[] = array(
-          'path' => $content_type['link_path'],
-          'title' => $content_type['link_title'],
-        );
+          $return[] = array(
+            'path' => $content_type['link_path'],
+            'title' => $content_type['link_title'],
+          );
       }
+
+
       break;
 
   }
