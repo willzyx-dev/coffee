@@ -23,15 +23,14 @@ Drupal.behaviors.coffee = function () {
       $(document).keydown(function (event) {
         
         var activeElement = $(document.activeElement);
-
         // Show the form with alt + D. Use 2 keycodes as 'D' can be uppercase or lowercase.
-        if (!Drupal.coffee.form.is(':visible') && event.altKey === true && (event.keyCode === 68 || event.keyCode === 206)) {
+        if (!Drupal.coffee.form.is(':visible') && event.originalEvent.altKey === true && (event.keyCode === 68 || event.keyCode === 206)) {
           Drupal.coffee.open();
           event.preventDefault();
         }
 
         // Close the form with esc or alt + D.
-        else if (Drupal.coffee.form.is(':visible') && (event.keyCode === 27 || (event.altKey === true && (event.keyCode === 68 || event.keyCode === 206)))) {
+        else if (Drupal.coffee.form.is(':visible') && (event.keyCode === 27 || (event.originalEvent.altKey === true && (event.keyCode === 68 || event.keyCode === 206)))) {
           Drupal.coffee.close();
           event.preventDefault();
         }
@@ -54,11 +53,11 @@ Drupal.behaviors.coffee = function () {
 
       // .live() is deprecated ==>> convert to .on() when Drupal gets jQuery 1.7+ (http://api.jquery.com/live/)
       // Remove the fake focus class once actual focus is used.
-      $('#coffee-results a').live('focus', function () {
+      $('#coffee-results a').focus( function () {
         Drupal.coffee.results.find('.focus').removeClass('focus');
       })
       // We close the form explicitly after following a link as pages aren't reloaded when the overlay module is used.
-      .live('click', function () {
+      $('#coffee-results a').click( function () {
         Drupal.coffee.close();
       });
 };
