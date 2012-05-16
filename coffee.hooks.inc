@@ -98,7 +98,7 @@ function coffee_redirect($input) {
 /**
  * Implements hook_coffee_command().
  */
-function coffee_coffee_command($op, $args) {
+function coffee_coffee_command($op) {
   switch ($op) {
 
     // Display the links of the node/add page.
