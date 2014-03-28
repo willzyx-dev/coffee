@@ -3,11 +3,12 @@
  * JavaScript file for the Coffee module.
  */
 
-(function($) {
+(function($, Drupal, drupalSettings, DrupalCoffee) {
   // Remap the filter functions for autocomplete to recognise the
   // extra value "command".
   var proto = $.ui.autocomplete.prototype,
   	initSource = proto._initSource;
+  var DrupalCoffee;
 
   function filter(array, term) {
   	var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), 'i');
@@ -29,47 +30,48 @@
   	}
   });
 
-  Drupal.coffee = Drupal.coffee || {};
+  DrupalCoffee = DrupalCoffee || {};
 
   Drupal.behaviors.coffee = {
     attach: function() {
       $('body').once('coffee', function() {
         var body = $(this);
-        Drupal.coffee.bg.appendTo(body).hide();
+        DrupalCoffee.bg.appendTo(body).hide();
 
-        Drupal.coffee.form
-        .append(Drupal.coffee.label)
-        .append(Drupal.coffee.field)
-        .append(Drupal.coffee.results)
+        DrupalCoffee.form
+        .append(DrupalCoffee.label)
+        .append(DrupalCoffee.field)
+        .append(DrupalCoffee.results)
         .wrapInner('<div id="coffee-form-inner" />')
         .addClass('hide-form')
         .appendTo(body);
 
         // Load autocomplete data set, consider implementing
         // caching with local storage.
-        Drupal.coffee.dataset = [];
+        DrupalCoffee.dataset = [];
         
         var jquery_ui_version = $.ui.version.split('.');
         var jquery110 = parseInt(jquery_ui_version[0]) >= 1 && parseInt(jquery_ui_version[1]) > 9;
         var autocomplete_data_element = (jquery110) ? 'ui-autocomplete' : 'autocomplete';
 
         $.ajax({
-          url: Drupal.settings.basePath + '?q=admin/coffee/menu',
+          //url: Drupal.settings.basePath + '?q=admin/coffee/get-data',\
+          url: '/admin/coffee/get-data',
           dataType: 'json',
           success: function(data) {
-            Drupal.coffee.dataset = data;
+            DrupalCoffee.dataset = data;
 
             // Apply autocomplete plugin on show
-            var $autocomplete = $(Drupal.coffee.field).autocomplete({
-              source: Drupal.coffee.dataset,
+            var $autocomplete = $(DrupalCoffee.field).autocomplete({
+              source: DrupalCoffee.dataset,
               select: function(event, ui) {
-                Drupal.coffee.redirect(ui.item.value, event.metaKey);
+                DrupalCoffee.redirect(ui.item.value, event.metaKey);
                 event.preventDefault();
 
                 return false;
               },
               delay: 0,
-              appendTo: Drupal.coffee.results
+              appendTo: DrupalCoffee.results
            });
             
            $autocomplete.data(autocomplete_data_element)._renderItem = function(ul, item) {
@@ -81,10 +83,10 @@
 
             // This isn't very nice, there are methods within that we need
             // to alter, so here comes a big wodge of text...
-            var self = Drupal.coffee.field;
-            $(Drupal.coffee.field).data(autocomplete_data_element).menu = $('<ol></ol>')
+            var self = DrupalCoffee.field;
+            $(DrupalCoffee.field).data(autocomplete_data_element).menu = $('<ol></ol>')
       			.addClass('ui-autocomplete')
-      			.appendTo(Drupal.coffee.results)
+      			.appendTo(DrupalCoffee.results)
       			// prevent the close-on-blur in case of a "slow" click on the menu (long mousedown).
       			.mousedown(function(event) {})
       			.menu({
@@ -94,7 +96,7 @@
       					var item = ui.item.data('item.autocomplete'),
       						previous = self.previous;
 
-      					Drupal.coffee.redirect(item.value, event.metaKey);
+      					DrupalCoffee.redirect(item.value, event.metaKey);
       					event.preventDefault();
       				},
       				blur: function(event, ui) {
@@ -104,7 +106,7 @@
       			.data('menu');
 
             // We want to limit the number of results.
-            $(Drupal.coffee.field).data(autocomplete_data_element)._renderMenu = function(ul, items) {
+            $(DrupalCoffee.field).data(autocomplete_data_element)._renderMenu = function(ul, items) {
           		var self = this;
           		items = items.slice(0, 7); // @todo: max should be in Drupal.settings var.
           		$.each( items, function(index, item) {
@@ -113,17 +115,17 @@
           	};
 
           	// On submit of the form select the first result if available.
-          	Drupal.coffee.form.submit(function() {
-          	  var firstItem = jQuery(Drupal.coffee.results).find('li:first').data('item.autocomplete');
+          	DrupalCoffee.form.submit(function() {
+          	  var firstItem = jQuery(DrupalCoffee.results).find('li:first').data('item.autocomplete');
           	  if (typeof firstItem == 'object') {
-          	    Drupal.coffee.redirect(firstItem.value, false);
+          	    DrupalCoffee.redirect(firstItem.value, false);
           	  }
 
           	  return false;
           	});
           },
           error: function() {
-            Drupal.coffee.field.val('Could not load data, please refresh the page');
+            DrupalCoffee.field.val('Could not load data, please refresh the page');
           }
         });
 
@@ -132,16 +134,16 @@
           var activeElement = $(document.activeElement);
 
           // Show the form with alt + D. Use 2 keycodes as 'D' can be uppercase or lowercase.
-          if (Drupal.coffee.form.hasClass('hide-form') && 
+          if (DrupalCoffee.form.hasClass('hide-form') && 
         		  event.altKey === true && 
         		  // 68/206 = d/D, 75 = k. 
         		  (event.keyCode === 68 || event.keyCode === 206  || event.keyCode === 75)) {
-            Drupal.coffee.coffee_show();
+            DrupalCoffee.coffee_show();
             event.preventDefault();
           }
           // Close the form with esc or alt + D.
-          else if (!Drupal.coffee.form.hasClass('hide-form') && (event.keyCode === 27 || (event.altKey === true && (event.keyCode === 68 || event.keyCode === 206)))) {
-            Drupal.coffee.coffee_close();
+          else if (!DrupalCoffee.form.hasClass('hide-form') && (event.keyCode === 27 || (event.altKey === true && (event.keyCode === 68 || event.keyCode === 206)))) {
+            DrupalCoffee.coffee_close();
             event.preventDefault();
           }
         });
@@ -155,30 +157,30 @@
   /**
    * Open the form and focus on the search field.
    */
-  Drupal.coffee.coffee_show = function() {
-    Drupal.coffee.form.removeClass('hide-form');
-    Drupal.coffee.bg.show();
-    Drupal.coffee.field.focus();
-    $(Drupal.coffee.field).autocomplete({enable: true});
+  DrupalCoffee.coffee_show = function() {
+    DrupalCoffee.form.removeClass('hide-form');
+    DrupalCoffee.bg.show();
+    DrupalCoffee.field.focus();
+    $(DrupalCoffee.field).autocomplete({enable: true});
   };
 
   /**
    * Close the form and destroy all data.
    */
-  Drupal.coffee.coffee_close = function() {
-    Drupal.coffee.field.val('');
-    //Drupal.coffee.results.empty();
-    Drupal.coffee.form.addClass('hide-form');
-    Drupal.coffee.bg.hide();
-    $(Drupal.coffee.field).autocomplete({enable: false});
+  DrupalCoffee.coffee_close = function() {
+    DrupalCoffee.field.val('');
+    //DrupalCoffee.results.empty();
+    DrupalCoffee.form.addClass('hide-form');
+    DrupalCoffee.bg.hide();
+    $(DrupalCoffee.field).autocomplete({enable: false});
   };
 
   /**
    * Close the Coffee form and redirect.
    * Todo: make it work with the overlay module.
    */
-  Drupal.coffee.redirect = function(path, openInNewWindow) {
-    Drupal.coffee.coffee_close();
+  DrupalCoffee.redirect = function(path, openInNewWindow) {
+    DrupalCoffee.coffee_close();
 
     if (openInNewWindow) {
       window.open(Drupal.settings.basePath + path);
@@ -191,20 +193,20 @@
   /**
    * The HTML elements.
    */
-  Drupal.coffee.label = $('<label for="coffee-q" class="element-invisible" />').text(Drupal.t('Query'));
+  DrupalCoffee.label = $('<label for="coffee-q" class="element-invisible" />').text(Drupal.t('Query'));
 
-  Drupal.coffee.results = $('<div id="coffee-results" />');
+  DrupalCoffee.results = $('<div id="coffee-results" />');
 
   // Instead of appending results one by one, we put them in a placeholder element
   // first and then append them all at once to prevent flickering while typing.
-  Drupal.coffee.resultsPlaceholder = $('<ol />');
+  DrupalCoffee.resultsPlaceholder = $('<ol />');
 
-  Drupal.coffee.form = $('<form id="coffee-form" action="#" />');
+  DrupalCoffee.form = $('<form id="coffee-form" action="#" />');
 
-  Drupal.coffee.bg = $('<div id="coffee-bg" />').click(function() {
-    Drupal.coffee.coffee_close();
+  DrupalCoffee.bg = $('<div id="coffee-bg" />').click(function() {
+    DrupalCoffee.coffee_close();
   });
 
-  Drupal.coffee.field = $('<input id="coffee-q" type="text" autocomplete="off" />');
+  DrupalCoffee.field = $('<input id="coffee-q" type="text" autocomplete="off" />');
 
-}(jQuery));
+}(jQuery, Drupal, drupalSettings));
