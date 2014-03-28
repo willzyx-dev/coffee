@@ -2,10 +2,7 @@
 
 /**
  * @file
- * Coffee primary module file
- *
- * Implements hook_perm, hook_menu, hook_init
- * and a function to handle the result for Coffee.
+ * Coffee primary module file.
  */
 
 /**
@@ -40,14 +37,8 @@ function coffee_menu_link_defaults() {
 /**
  * Implements hook_page_build().
  */
-function coffee_page_build() {
-  // Only users with the permission "access coffee" can use Coffee.
-  if (user_access('access coffee')) {
-    // Add the javascript and css files.
-    drupal_add_library('system', 'ui.autocomplete');
-    drupal_add_js(drupal_get_path('module', 'coffee') . '/js/coffee.js', array('type' => 'file'));
-    drupal_add_css(drupal_get_path('module', 'coffee') . '/css/coffee.css', array('type' => 'file'));
-  }
+function coffee_page_build(&$page) {
+  $page['#attached']['libraries'] = 'coffee/coffee';
 }
 
 /**
