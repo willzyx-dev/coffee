@@ -7,8 +7,9 @@
 
 namespace Drupal\coffee\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Controller\ControllerBase;
-use \Drupal\Component\Utility\Json;
 
 /**
  * Provides route responses for coffee.module.
@@ -28,7 +29,7 @@ class CoffeeController extends ControllerBase {
       'command' => 'command',
     );
 
-    return \Drupal\Component\Utility\Json::encode($output);
+    return new JsonResponse($output);
   }
 
 }
