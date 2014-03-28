@@ -38,7 +38,7 @@ function coffee_menu_link_defaults() {
  * Implements hook_page_build().
  */
 function coffee_page_build(&$page) {
-  $page['#attached']['libraries'] = 'coffee/coffee';
+  $page['#attached']['library'][] = 'coffee/drupal.coffee';
 }
 
 /**
