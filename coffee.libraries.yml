@@ -1,0 +1,11 @@
+coffee:
+  js:
+    js/coffee.js
+  css:
+    component:
+      css/coffee.css: { media: screen }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.ui
+    
