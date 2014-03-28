@@ -1,11 +1,16 @@
-coffee:
+drupal.coffee:
+  version: VERSION
   js:
-    js/coffee.js
+    js/coffee.js: {}
   css:
     component:
-      css/coffee.css: { media: screen }
+      css/coffee.css: {}
   dependencies:
-    - core/drupal
     - core/jquery
+    - core/drupal
+    - core/drupalSettings
     - core/jquery.ui
+    - core/jquery.ui.autocomplete
+  jquery.ui.autocomplete:
+    version: 1.8.11
     
