@@ -25,31 +25,15 @@ function coffee_permission() {
 }
 
 /**
- * Implements hook_menu().
+ * Implements hook_menu_link_defaults().
  */
-function coffee_menu() {
-  $items = array();
-  $path = drupal_get_path('module', 'coffee');
-
-  // Define callback for menu structure callback.
-  $items['admin/coffee/menu'] = array(
-    'title' => 'Coffee Menu Response',
-    'page callback' => 'coffee_get_menu_response',
-    'access arguments' => array('access coffee'),
-    'type' => MENU_CALLBACK,
+function coffee_menu_link_defaults() {
+  $items['coffee.configuration'] = array(
+    'link_title' => 'Coffee',
+    'description' => 'Select what menus coffee should search.',
+    'route_name' => 'coffee.configuration',
+    'parent' => 'system.admin_config_ui',
   );
-
-  $items['admin/config/user-interface/coffee'] = array(
-    'title' => 'Coffee',
-    'description' => 'Configuration for the Coffee module.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('coffee_admin_settings'),
-    'access arguments' => array('administer coffee'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'coffee.admin.inc',
-    'file path' => $path,
-  );
-
   return $items;
 }
 
