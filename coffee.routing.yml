@@ -1,7 +1,7 @@
 coffee.configuration:
   path: '/admin/config/user-interface/coffee'
   defaults: 
-    _form: '\Drupal\coffee\CoffeeConfigurationForm'
+    _form: 'Drupal\coffee\Form\CoffeeConfigurationForm'
     _title: 'Coffee configuration'
   requirements:
     _permission: 'administer coffee'
@@ -9,6 +9,6 @@ coffee.configuration:
 coffee.get_data:
   path: '/admin/coffee/get-data'
   defaults:
-    _content: '\Drupal\coffee\Controller\CoffeeController::coffeeData'
+    _controller: 'Drupal\coffee\Controller\CoffeeController::coffeeData'
   requirements:
     _permission: 'access coffee'
