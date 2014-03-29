@@ -167,7 +167,6 @@
   DrupalCoffee.results = $('<div id="coffee-results" />');
   DrupalCoffee.wrapper = $('<div class="coffee-form-wrapper" />');
   DrupalCoffee.form = $('<form id="coffee-form" action="#" />');
-
   DrupalCoffee.bg = $('<div id="coffee-bg" />').click(function() {
     DrupalCoffee.coffee_close();
   });

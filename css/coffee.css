@@ -18,12 +18,15 @@
 }
 
 .coffee-form-wrapper{
-    left:0;
-    width: 100%;
-    position: fixed;
-    top: 20%;
+  pointer-events: none;
+  left: 0;
+  width: 100%;
+  position: fixed;
+  top: 20%;
+  z-index: 9999;
 }
 #coffee-form {
+  pointer-events: auto;
   position:relative;
   margin: 0 auto;
   max-width: 500px;
@@ -37,7 +40,6 @@
   -ms-border-radius: 15px;
   -o-border-radius: 15px;
   border-radius: 15px;
-  z-index: 9999;
   opacity: 1;
   -webkit-transition: opacity 0.35s;
   -moz-transition: opacity 0.35s;
@@ -49,9 +51,9 @@
 #coffee-form,
 #coffee-form input,
 #coffee-form a{
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .coffee-form-wrapper.hide-form {
