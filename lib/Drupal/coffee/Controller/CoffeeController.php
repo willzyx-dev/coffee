@@ -23,11 +23,14 @@ class CoffeeController extends ControllerBase {
     $output = array();
 
     // @todo Placeholder.
-    $output[] = array(
-      'label' => 'label',
-      'value' => 'value',
-      'command' => 'command',
-    );
+    for ($i=1; $i<9; $i++){
+      $output[] = array(
+        'label' => 'label'.$i,
+        'value' => 'value'.$i,
+        'command' => 'command',
+      );
+    }
+
 
     return new JsonResponse($output);
   }

@@ -49,10 +49,8 @@
         // Load autocomplete data set, consider implementing
         // caching with local storage.
         DrupalCoffee.dataset = [];
-        
-        var jquery_ui_version = $.ui.version.split('.');
-        var jquery110 = parseInt(jquery_ui_version[0]) >= 1 && parseInt(jquery_ui_version[1]) > 9;
-        var autocomplete_data_element = (jquery110) ? 'ui-autocomplete' : 'autocomplete';
+
+        var autocomplete_data_element = 'ui-autocomplete';
 
         $.ajax({
           //url: Drupal.settings.basePath + '?q=admin/coffee/get-data',\
@@ -81,36 +79,12 @@
                       .appendTo(ul);
             };
 
-            // This isn't very nice, there are methods within that we need
-            // to alter, so here comes a big wodge of text...
-            var self = DrupalCoffee.field;
-            $(DrupalCoffee.field).data(autocomplete_data_element).menu = $('<ol></ol>')
-      			.addClass('ui-autocomplete')
-      			.appendTo(DrupalCoffee.results)
-      			// prevent the close-on-blur in case of a "slow" click on the menu (long mousedown).
-      			.mousedown(function(event) {})
-      			.menu({
-      				focus: function(event, ui) {
-      				},
-      				selected: function(event, ui) {
-      					var item = ui.item.data('item.autocomplete'),
-      						previous = self.previous;
-
-      					DrupalCoffee.redirect(item.value, event.metaKey);
-      					event.preventDefault();
-      				},
-      				blur: function(event, ui) {
-      				}
-      			})
-      			.hide()
-      			.data('menu');
-
             // We want to limit the number of results.
             $(DrupalCoffee.field).data(autocomplete_data_element)._renderMenu = function(ul, items) {
           		var self = this;
           		items = items.slice(0, 7); // @todo: max should be in Drupal.settings var.
           		$.each( items, function(index, item) {
-          			self._renderItem(ul, item);
+          			self._renderItemData(ul, item);
           		});
           	};
 
@@ -177,7 +151,6 @@
 
   /**
    * Close the Coffee form and redirect.
-   * Todo: make it work with the overlay module.
    */
   DrupalCoffee.redirect = function(path, openInNewWindow) {
     DrupalCoffee.coffee_close();
@@ -193,7 +166,7 @@
   /**
    * The HTML elements.
    */
-  DrupalCoffee.label = $('<label for="coffee-q" class="element-invisible" />').text(Drupal.t('Query'));
+  DrupalCoffee.label = $('<label for="coffee-q" class="hidden" />').text(Drupal.t('Query'));
 
   DrupalCoffee.results = $('<div id="coffee-results" />');
 
