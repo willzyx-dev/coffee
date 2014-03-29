@@ -5,6 +5,8 @@
  * includes an example of hook_coffee_commands().
  */
 
+use Drupal\Core;
+
 /**
  * Implements hook_coffee_commands().
  */
@@ -18,21 +20,21 @@ function coffee_coffee_commands() {
     'command' => ':front',
   );
 
-  // Display the links of the node/add page.
   // The command is ":add" and includes the link_title to empower the
   // autocompletion.
-  $path = 'node/add';
-  $item = menu_get_item($path);
-  $content_types = system_admin_menu_block($item);
-
   $command = ':add';
-  foreach ($content_types as $content_type) {
-    $commands[] = array(
-      'value' => $content_type['link_path'],
-      'label' => $content_type['link_title'],
-      'command' => $command . ' ' . drupal_strtolower($content_type['link_title']),
-    );
+  $em = \Drupal::entityManager();
+  // Only use node types the user has access to.
+  foreach ($em->getStorage('node_type')->loadMultiple() as $type) {
+    if ($em->getAccessController('node')->createAccess($type->type)) {
+      $commands[] = array(
+        'value' => 'node/add/' . $type->type,
+        'label' => $type->type,
+        'command' => $command . ' ' . $type->type,
+      );
+    }
   }
 
   return $commands;
 }
+

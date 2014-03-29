@@ -9,6 +9,7 @@ drupal.coffee:
     - core/jquery
     - core/drupal
     - core/drupalSettings
+    - core/jquery.once
     - core/jquery.ui
     - core/jquery.ui.autocomplete
   jquery.ui.autocomplete:
