@@ -9,7 +9,6 @@
   var proto = $.ui.autocomplete.prototype,
   	initSource = proto._initSource;
   var DrupalCoffee;
-
   function filter(array, term) {
   	var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), 'i');
   	return $.grep(array, function(value) {
@@ -37,14 +36,13 @@
       $('body').once('coffee', function() {
         var body = $(this);
         DrupalCoffee.bg.appendTo(body).hide();
-
+        DrupalCoffee.wrapper.appendTo('body').addClass('hide-form');
         DrupalCoffee.form
         .append(DrupalCoffee.label)
         .append(DrupalCoffee.field)
         .append(DrupalCoffee.results)
         .wrapInner('<div id="coffee-form-inner" />')
-        .addClass('hide-form')
-        .appendTo(body);
+        .appendTo(DrupalCoffee.wrapper);
 
         // Load autocomplete data set, consider implementing
         // caching with local storage.
@@ -53,8 +51,7 @@
         var autocomplete_data_element = 'ui-autocomplete';
 
         $.ajax({
-          //url: Drupal.settings.basePath + '?q=admin/coffee/get-data',\
-          url: '/admin/coffee/get-data',
+          url: drupalSettings.path.basePath + 'admin/coffee/get-data',
           dataType: 'json',
           success: function(data) {
             DrupalCoffee.dataset = data;
@@ -108,7 +105,7 @@
           var activeElement = $(document.activeElement);
 
           // Show the form with alt + D. Use 2 keycodes as 'D' can be uppercase or lowercase.
-          if (DrupalCoffee.form.hasClass('hide-form') && 
+          if (DrupalCoffee.wrapper.hasClass('hide-form') &&
         		  event.altKey === true && 
         		  // 68/206 = d/D, 75 = k. 
         		  (event.keyCode === 68 || event.keyCode === 206  || event.keyCode === 75)) {
@@ -116,7 +113,7 @@
             event.preventDefault();
           }
           // Close the form with esc or alt + D.
-          else if (!DrupalCoffee.form.hasClass('hide-form') && (event.keyCode === 27 || (event.altKey === true && (event.keyCode === 68 || event.keyCode === 206)))) {
+          else if (!DrupalCoffee.wrapper.hasClass('hide-form') && (event.keyCode === 27 || (event.altKey === true && (event.keyCode === 68 || event.keyCode === 206)))) {
             DrupalCoffee.coffee_close();
             event.preventDefault();
           }
@@ -132,7 +129,7 @@
    * Open the form and focus on the search field.
    */
   DrupalCoffee.coffee_show = function() {
-    DrupalCoffee.form.removeClass('hide-form');
+    DrupalCoffee.wrapper.removeClass('hide-form');
     DrupalCoffee.bg.show();
     DrupalCoffee.field.focus();
     $(DrupalCoffee.field).autocomplete({enable: true});
@@ -144,7 +141,7 @@
   DrupalCoffee.coffee_close = function() {
     DrupalCoffee.field.val('');
     //DrupalCoffee.results.empty();
-    DrupalCoffee.form.addClass('hide-form');
+    DrupalCoffee.wrapper.addClass('hide-form');
     DrupalCoffee.bg.hide();
     $(DrupalCoffee.field).autocomplete({enable: false});
   };
@@ -156,10 +153,10 @@
     DrupalCoffee.coffee_close();
 
     if (openInNewWindow) {
-      window.open(Drupal.settings.basePath + path);
+      window.open(drupalSettings.path.basePath + path);
     }
     else {
-      document.location = Drupal.settings.basePath + path;
+      document.location = drupalSettings.path.basePath + path;
     }
   };
 
@@ -167,13 +164,8 @@
    * The HTML elements.
    */
   DrupalCoffee.label = $('<label for="coffee-q" class="hidden" />').text(Drupal.t('Query'));
-
   DrupalCoffee.results = $('<div id="coffee-results" />');
-
-  // Instead of appending results one by one, we put them in a placeholder element
-  // first and then append them all at once to prevent flickering while typing.
-  DrupalCoffee.resultsPlaceholder = $('<ol />');
-
+  DrupalCoffee.wrapper = $('<div class="coffee-form-wrapper" />');
   DrupalCoffee.form = $('<form id="coffee-form" action="#" />');
 
   DrupalCoffee.bg = $('<div id="coffee-bg" />').click(function() {
