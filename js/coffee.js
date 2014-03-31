@@ -8,7 +8,6 @@
   // extra value "command".
   var proto = $.ui.autocomplete.prototype,
   	initSource = proto._initSource;
-  var DrupalCoffee;
   function filter(array, term) {
   	var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), 'i');
   	return $.grep(array, function(value) {
@@ -102,7 +101,6 @@
 
         // Key events
         $(document).keydown(function(event) {
-          var activeElement = $(document.activeElement);
 
           // Show the form with alt + D. Use 2 keycodes as 'D' can be uppercase or lowercase.
           if (DrupalCoffee.wrapper.hasClass('hide-form') &&
@@ -163,7 +161,7 @@
   /**
    * The HTML elements.
    */
-  DrupalCoffee.label = $('<label for="coffee-q" class="hidden" />').text(Drupal.t('Query'));
+  DrupalCoffee.label = $('<label for="coffee-q" class="hidden" />').text(Drupal.t('Query', '', ''));
   DrupalCoffee.results = $('<div id="coffee-results" />');
   DrupalCoffee.wrapper = $('<div class="coffee-form-wrapper" />');
   DrupalCoffee.form = $('<form id="coffee-form" action="#" />');
