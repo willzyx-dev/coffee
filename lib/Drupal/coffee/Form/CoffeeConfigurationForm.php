@@ -8,6 +8,7 @@
 namespace Drupal\coffee\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Component\Utility\String;
 
 
 /**
@@ -32,7 +33,8 @@ class CoffeeConfigurationForm extends ConfigFormBase {
     $menu_options = array();
 
     foreach ($menus as $name => $title) {
-      $menu_options[$name] = check_plain($title);
+      // @todo Sanitize $title as check_plain is deprecated.
+      $menu_options[$name] = String::checkPlain($title);
     }
 
     if (!empty($menu_options)) {
