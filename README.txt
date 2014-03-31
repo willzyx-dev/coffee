@@ -82,6 +82,4 @@ Maintainer
 
 Co-maintainer
 - Alli Price 'heylookalive' <http://drupal.org/user/431193>
-
-JavaScript/CSS/Less
-- Maarten Verbaarschot 'maartenverbaarschot' <http://drupal.org/user/1305466>
+- Oliver Köhler 'Nebel54' <http://drupal.org/user/1781874>
