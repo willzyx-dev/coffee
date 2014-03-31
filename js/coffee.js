@@ -58,6 +58,10 @@
             // Apply autocomplete plugin on show
             var $autocomplete = $(DrupalCoffee.field).autocomplete({
               source: DrupalCoffee.dataset,
+              focus: function( event, ui ) {
+                // Prevents replacing the value of the input field
+                event.preventDefault();
+              },
               select: function(event, ui) {
                 DrupalCoffee.redirect(ui.item.value, event.metaKey);
                 event.preventDefault();
