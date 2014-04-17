@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  */
 function coffee_install() {
   // Let users know how to use the module!
