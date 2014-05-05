@@ -65,8 +65,7 @@ class CoffeeController extends ControllerBase {
     // Reindex the array.
     $output = array_values($output);
 
-
-      return new JsonResponse($output);
+    return new JsonResponse($output);
   }
 
   /**
