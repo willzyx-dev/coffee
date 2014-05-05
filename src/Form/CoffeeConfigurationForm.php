@@ -14,7 +14,6 @@ use Drupal\Component\Utility\String;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-
 /**
  * Configure Coffee for this site.
  */

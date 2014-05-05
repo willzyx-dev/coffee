@@ -21,7 +21,7 @@ class CoffeeController extends ControllerBase {
   public function coffeeData() {
     $output = array();
 
-    // Get configured menus from config.
+    // Get configured menus from configuration.
     $menus = \Drupal::config('coffee.configuration')->get('coffee_menus');
 
     foreach ($menus as $v) {
@@ -34,7 +34,7 @@ class CoffeeController extends ControllerBase {
       $menu = $menu_tree->buildAllData($v);
 
       foreach ($menu as $link) {
-        $command = $v == 'user-menu' ? ':user' : NULL ;
+        $command = ($v == 'user-menu') ? ':user' : NULL;
         $this->coffee_traverse_below($link, $output, $command);
       }
     }
@@ -50,7 +50,6 @@ class CoffeeController extends ControllerBase {
       $output = array_merge($output, $commands);
     }
 
-
     foreach ($output as $k => $v) {
       if ($v['value'] == '<front>') {
         unset($output[$k]);
@@ -62,7 +61,7 @@ class CoffeeController extends ControllerBase {
 
     }
 
-    // Reindex the array.
+    // Re-index the array.
     $output = array_values($output);
 
     return new JsonResponse($output);
@@ -76,7 +75,7 @@ class CoffeeController extends ControllerBase {
   protected function coffee_traverse_below($link, &$output, $command = NULL) {
     $l = isset($link['link']) ? $link['link'] : array();
 
-    // Only add if user has access.
+    // Only add link if user has access.
     if (isset($l['access']) && $l['access']) {
       $label = (!empty($l['title']) ? $l['title'] : $l['link_title']);
       $output[] = array(

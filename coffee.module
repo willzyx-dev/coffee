@@ -5,8 +5,8 @@
  * Coffee primary module file.
  */
 
-
 use Drupal\Core;
+
 /**
  * Implements hook_permission().
  */
@@ -56,6 +56,5 @@ function coffee_hook_info() {
       'group' => 'coffee',
     ),
   );
-
   return $hooks;
 }
