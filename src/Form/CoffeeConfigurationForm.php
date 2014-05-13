@@ -53,7 +53,7 @@ class CoffeeConfigurationForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
 
-    $this->configFactory->get('coffee.configuration')
+    $this->config('coffee.configuration')
     ->set('coffee_menus', $form_state['values']['coffee_menus'])
     ->save();
 
