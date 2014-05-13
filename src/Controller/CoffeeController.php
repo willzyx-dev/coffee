@@ -9,6 +9,7 @@ namespace Drupal\coffee\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Provides route responses for coffee.module.
@@ -57,7 +58,7 @@ class CoffeeController extends ControllerBase {
       }
 
       // Filter out XSS.
-      $output[$k]['label'] = filter_xss($output[$k]['label']);
+      $output[$k]['label'] = Xss::filter($output[$k]['label']);
 
     }
 
