@@ -30,7 +30,7 @@ class CoffeeConfigurationForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('coffee.configuration');
+    $config = $this->config('coffee.configuration');
 
     $menus = menu_ui_get_menus();
 
