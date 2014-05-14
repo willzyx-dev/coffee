@@ -43,5 +43,33 @@ function coffee_hook_info() {
       'group' => 'coffee',
     ),
   );
+
   return $hooks;
+}
+
+
+/**
+ * Implements hook_toolbar().
+ *
+ * @todo Implement Coffee specific icon.
+ */
+function coffee_toolbar() {
+  $items['coffee'] = array(
+    '#type' => 'toolbar_item',
+    'tab' => array(
+      '#type' => 'link',
+      '#title' => 'Coffee',
+      '#attributes' => array(
+        'title' => t('Coffee'),
+        'class' => array('toolbar-icon', 'toolbar-icon-coffee'),
+      ),
+    ),
+    '#attached' => array(
+      'library' => array(
+        'coffee/drupal.coffee',
+      ),
+    ),
+  );
+
+  return $items;
 }

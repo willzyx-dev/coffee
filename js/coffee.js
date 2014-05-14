@@ -104,6 +104,10 @@
           }
         });
 
+        $('.toolbar-icon-coffee').click( function(event) {
+            event.preventDefault();
+            DrupalCoffee.coffee_show();
+        });
         // Key events
         $(document).keydown(function (event) {
 

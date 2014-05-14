@@ -163,3 +163,8 @@
 #coffee-results .ui-widget {
   font-family: sans-serif;
 }
+
+.toolbar-bar .toolbar-icon-coffee:before,
+.toolbar-bar .toolbar-icon-coffee.active:before {
+    background-image: url("../../../core/misc/icons/ffffff/questionmark-disc.png");
+}
