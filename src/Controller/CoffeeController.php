@@ -25,18 +25,19 @@ class CoffeeController extends ControllerBase {
     // Get configured menus from configuration.
     $menus = \Drupal::config('coffee.configuration')->get('coffee_menus');
 
-    foreach ($menus as $v) {
-      if ($v === '0') {
+    if ($menus !== NULL) {
+      foreach ($menus as $v) {
+        if ($v === '0') {
           continue;
-      }
+        }
 
-      $menu_tree = \Drupal::service('menu_link.tree');
+        $menu_tree = \Drupal::service('menu_link.tree');
+        $menu = $menu_tree->buildAllData($v);
 
-      $menu = $menu_tree->buildAllData($v);
-
-      foreach ($menu as $link) {
-        $command = ($v == 'user-menu') ? ':user' : NULL;
-        $this->coffee_traverse_below($link, $output, $command);
+        foreach ($menu as $link) {
+          $command = ($v == 'user-menu') ? ':user' : NULL;
+          $this->coffee_traverse_below($link, $output, $command);
+        }
       }
     }
 

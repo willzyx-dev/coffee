@@ -51,7 +51,7 @@ function coffee_hook_info() {
 /**
  * Implements hook_toolbar().
  *
- * @todo Implement Coffee specific icon.
+ * @todo Coffee specific icon.
  */
 function coffee_toolbar() {
   $items['coffee'] = array(
@@ -59,8 +59,9 @@ function coffee_toolbar() {
     'tab' => array(
       '#type' => 'link',
       '#title' => 'Coffee',
+      '#href' => '',
       '#attributes' => array(
-        'title' => t('Coffee'),
+        'title' => t('Coffee, use alt+d to start Coffee'),
         'class' => array('toolbar-icon', 'toolbar-icon-coffee'),
       ),
     ),

@@ -8,6 +8,13 @@
  * Implements hook_install().
  */
 function coffee_install() {
+
+  // Set menu: admin as default menu.
+  $config = \Drupal::config('coffee.configuration');
+  $config->set('coffee_menus', array('admin'));
+  $config->save();
+
   // Let users know how to use the module!
   drupal_set_message(t('The Coffee module was successfully enabled, press alt+d to start Coffee.'), 'status');
+
 }
