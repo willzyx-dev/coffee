@@ -83,20 +83,27 @@
             // We want to limit the number of results.
             $(DrupalCoffee.field).data(autocomplete_data_element)._renderMenu = function (ul, items) {
               var self = this;
-              items = items.slice(0, 7); // @todo: max should be in Drupal.settings var.
+              //@todo: max should be in Drupal.settings var.
+              items = items.slice(0, 7);
               $.each(items, function (index, item) {
                 self._renderItemData(ul, item);
               });
             };
 
-            // On submit of the form select the first result if available.
-            DrupalCoffee.form.submit(function () {
-              var firstItem = jQuery(DrupalCoffee.results).find('li:first').data('item.autocomplete');
-              if (typeof firstItem == 'object') {
-                DrupalCoffee.redirect(firstItem.value, false);
-              }
+            DrupalCoffee.form.keydown(function(event) {
+              if (event.keyCode == 13) {
+                var openInNewWindow = false;
+                event.preventDefault();
 
-              return false;
+                if (event.metaKey) {
+                  openInNewWindow = true;
+                }
+
+                var $firstItem = jQuery(DrupalCoffee.results).find('li:first').data('item.autocomplete');
+                if (typeof $firstItem === 'object') {
+                  DrupalCoffee.redirect($firstItem.value, openInNewWindow);
+                }
+              }
             });
           },
           error: function () {
@@ -104,7 +111,7 @@
           }
         });
 
-        $('.toolbar-icon-coffee').click( function(event) {
+        $('.toolbar-icon-coffee').click(function(event) {
             event.preventDefault();
             DrupalCoffee.coffee_show();
         });

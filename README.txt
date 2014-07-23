@@ -46,6 +46,9 @@ will try to find the right result in as less characters as possible.
 For example, if you want to go the the Appearance admin page, type ap and
 just hit enter.
 
+To open the first result in a new window, press command + enter on a mac or
+ctrl + enter on a pc.
+
 If your search query returns multiple results, you can use the arrow up/down
 keys to choose the one you were looking for.
 
