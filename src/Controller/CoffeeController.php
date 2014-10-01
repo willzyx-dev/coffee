@@ -10,6 +10,7 @@ namespace Drupal\coffee\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Menu\MenuTreeParameters;
 
 /**
  * Provides route responses for coffee.module.
@@ -24,19 +25,21 @@ class CoffeeController extends ControllerBase {
 
     // Get configured menus from configuration.
     $menus = \Drupal::config('coffee.configuration')->get('coffee_menus');
-
     if ($menus !== NULL) {
       foreach ($menus as $v) {
         if ($v === '0') {
           continue;
         }
 
-        $menu_tree = \Drupal::service('menu_link.tree');
-        $menu = $menu_tree->buildAllData($v);
+        // Build the menu tree.
+        $menu_tree_parameters = new MenuTreeParameters();
+        $tree = \Drupal::menuTree()->load($v, $menu_tree_parameters);
 
-        foreach ($menu as $link) {
+        foreach ($tree as $key => $link) {
+
           $command = ($v == 'user-menu') ? ':user' : NULL;
           $this->coffee_traverse_below($link, $output, $command);
+
         }
       }
     }
@@ -75,20 +78,23 @@ class CoffeeController extends ControllerBase {
    * Helper function to traverse down through a menu structure.
    */
   protected function coffee_traverse_below($link, &$output, $command = NULL) {
-    $l = isset($link['link']) ? $link['link'] : array();
+    $l = isset($link->link) ? $link->link : array();
 
-    // Only add link if user has access.
-    if (isset($l['access']) && $l['access']) {
-      $label = (!empty($l['title']) ? $l['title'] : $l['link_title']);
+
+   // Only add link if user has access.
+   //if (isset($l->access) && $l->access) {
+      $title = $l->getTitle();
+      $url = $l->getUrlObject()->toString();
+      $label = (!empty($title) ? $title : 'test');
       $output[] = array(
-        'value' => $l['link_path'],
+        'value' => $url,
         'label' => $label,
         'command' => $command,
       );
-    }
+    //}
 
-    if (isset($link['below']) && is_array($link['below'])) {
-      foreach ($link['below'] as $below_link) {
+    if ($l->subTree === 000) {
+      foreach ($l->subTree as $below_link) {
         $this->coffee_traverse_below($below_link, $output);
       }
     }
