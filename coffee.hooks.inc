@@ -26,7 +26,7 @@ function coffee_coffee_commands() {
   $em = \Drupal::entityManager();
   // Only use node types the user has access to.
   foreach ($em->getStorage('node_type')->loadMultiple() as $type) {
-    if ($em->getAccessController('node')->createAccess($type->type)) {
+    if ($em->getAccessControlHandler('node')->createAccess($type->type)) {
       $commands[] = array(
         'value' => 'node/add/' . $type->type,
         'label' => $type->type,
