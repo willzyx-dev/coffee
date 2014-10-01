@@ -80,7 +80,6 @@ class CoffeeController extends ControllerBase {
   protected function coffee_traverse_below($link, &$output, $command = NULL) {
     $l = isset($link->link) ? $link->link : array();
 
-
    // Only add link if user has access.
    //if (isset($l->access) && $l->access) {
       $title = $l->getTitle();
@@ -93,8 +92,8 @@ class CoffeeController extends ControllerBase {
       );
     //}
 
-    if ($l->subTree === 000) {
-      foreach ($l->subTree as $below_link) {
+    if ($link->subtree) {
+      foreach ($link->subtree as $below_link) {
         $this->coffee_traverse_below($below_link, $output);
       }
     }
