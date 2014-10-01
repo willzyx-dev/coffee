@@ -8,22 +8,6 @@
 use Drupal\Core;
 
 /**
- * Implements hook_permission().
- */
-function coffee_permission() {
-  return array(
-    'access coffee' => array(
-      'title' => t('Access Coffee'),
-      'description' => t('Access the Coffee search box to navigate fast between admin pages'),
-    ),
-    'administer coffee' => array(
-      'title' => t('Administer Coffee'),
-      'description' => t('Administer the Coffee search module'),
-    ),
-  );
-}
-
-/**
  * Implements hook_page_build().
  */
 function coffee_page_build(&$page) {

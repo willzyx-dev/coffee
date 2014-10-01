@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Url;
+
 
 /**
  * Provides route responses for coffee.module.
@@ -47,8 +49,10 @@ class CoffeeController extends ControllerBase {
     module_load_include('inc', 'coffee', 'coffee.hooks');
     $commands = array();
 
-    foreach (\Drupal::moduleHandler()->getImplementations('coffee_commands') as $module) {
-      $commands = array_merge($commands, \Drupal::moduleHandler()->invoke($module, 'coffee_commands', array()));
+    foreach (\Drupal::moduleHandler()
+                    ->getImplementations('coffee_commands') as $module) {
+      $commands = array_merge($commands, \Drupal::moduleHandler()
+                                                ->invoke($module, 'coffee_commands', array()));
     }
 
     if (!empty($commands)) {
@@ -80,23 +84,67 @@ class CoffeeController extends ControllerBase {
   protected function coffee_traverse_below($link, &$output, $command = NULL) {
     $l = isset($link->link) ? $link->link : array();
 
-   // Only add link if user has access.
-   //if (isset($l->access) && $l->access) {
+    // Only add link if user has access.
+
+    $url = $l->getUrlObject();
+    if ($url->access()) {
       $title = $l->getTitle();
-      $url = $l->getUrlObject()->toString();
       $label = (!empty($title) ? $title : 'test');
       $output[] = array(
-        'value' => $url,
+        'value' => $url->toString(),
         'label' => $label,
         'command' => $command,
       );
-    //}
+    }
+
 
     if ($link->subtree) {
       foreach ($link->subtree as $below_link) {
         $this->coffee_traverse_below($below_link, $output);
       }
     }
+
+    $manager = \Drupal::service('plugin.manager.menu.local_task');
+
+    $local_tasks = $manager->getLocalTasksForRoute($l->getRouteName());
+    if ($local_tasks) {
+      $command = NULL;
+      foreach ($local_tasks as $key => $local_task_link) {
+        $this->coffee_traverse_local_tasks($local_task_link, $output);
+      }
+    }
+
+
   }
 
+  /**
+   * Helper function to traverse the local tasks.
+   */
+  protected function coffee_traverse_local_tasks($local_task_link, &$output) {
+    if (is_array($local_task_link)) {
+      foreach ($local_task_link as $key => $local_task) {
+        $this->coffee_traverse_local_tasks($local_task, $output);
+      }
+    }
+    else {
+      $local_task = $local_task_link;
+    }
+
+    if (is_object($local_task)) {
+
+      $route_name = $local_task->getPluginDefinition()['route_name'];
+      $route_parameters = $local_task->getPluginDefinition()['route_parameters'];
+      $url = Url::fromRoute($route_name, $route_parameters);
+
+      $label = $local_task->getTitle();
+      if ($url->access()) {
+        $output[] = array(
+          'value' => $url,
+          'label' => $label,
+          'command' => 'NULL',
+        );
+      }
+    }
+
+  }
 }
