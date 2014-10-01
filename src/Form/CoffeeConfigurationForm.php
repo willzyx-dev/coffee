@@ -7,7 +7,10 @@
 
 namespace Drupal\coffee\Form;
 
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
+
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Component\Utility\String;
@@ -29,7 +32,7 @@ class CoffeeConfigurationForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('coffee.configuration');
 
     $menus = menu_ui_get_menus();
@@ -51,7 +54,7 @@ class CoffeeConfigurationForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
 
     $this->config('coffee.configuration')
     ->set('coffee_menus', $form_state['values']['coffee_menus'])
