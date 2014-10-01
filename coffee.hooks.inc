@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_coffee_commands().
@@ -28,7 +29,7 @@ function coffee_coffee_commands() {
   foreach ($em->getStorage('node_type')->loadMultiple() as $type) {
     if ($em->getAccessControlHandler('node')->createAccess($type->type)) {
       $commands[] = array(
-        'value' => 'node/add/' . $type->type,
+        'value' => Url::fromUri('base://node/add/' . $type->type)->toString(),
         'label' => $type->type,
         'command' => $command . ' ' . $type->type,
       );

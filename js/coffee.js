@@ -74,9 +74,14 @@
             });
 
             $autocomplete.data(autocomplete_data_element)._renderItem = function (ul, item) {
+              // strip the basePath when displaying the link description
+              var description = item.value;
+              if( item.value.indexOf( drupalSettings.path.basePath ) === 0 ){
+                  description = item.value.substring( drupalSettings.path.basePath.length );
+              }
               return  $('<li></li>')
                 .data('item.autocomplete', item)
-                .append('<a>' + item.label + '<small class="description">' + item.value + '</small></a>')
+                .append('<a>' + item.label + '<small class="description">' + description + '</small></a>')
                 .appendTo(ul);
             };
 
@@ -169,10 +174,10 @@
     DrupalCoffee.coffee_close();
 
     if (openInNewWindow) {
-      window.open(drupalSettings.path.basePath + path);
+      window.open(path);
     }
     else {
-      document.location = drupalSettings.path.basePath + path;
+      document.location = path;
     }
   };
 
