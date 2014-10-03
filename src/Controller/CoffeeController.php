@@ -137,7 +137,7 @@ class CoffeeController extends ControllerBase {
       $url = Url::fromRoute($route_name, $route_parameters);
 
       $label = $local_task->getTitle();
-      if ($url->access()) {
+      if ($url->access() && !$url->isRouted()) {
         $output[] = array(
           'value' => $url,
           'label' => $label,
