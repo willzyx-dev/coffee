@@ -171,3 +171,10 @@
 .toolbar-icon-coffee:before{
     width: 24px !important;
 }
+
+#coffee-q{
+    background-image: url("../images/icons/bebebe/coffee.svg");
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 40px 40px;
+}
