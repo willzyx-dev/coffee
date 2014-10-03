@@ -166,5 +166,8 @@
 
 .toolbar-bar .toolbar-icon-coffee:before,
 .toolbar-bar .toolbar-icon-coffee.active:before {
-    background-image: url("../../../core/misc/icons/bebebe/questionmark-disc.svg");
+    background-image: url("../images/icons/bebebe/coffee.svg");
+}
+.toolbar-icon-coffee:before{
+    width: 24px !important;
 }
