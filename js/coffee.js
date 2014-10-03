@@ -47,6 +47,7 @@
         // Load autocomplete data set, consider implementing
         // caching with local storage.
         DrupalCoffee.dataset = [];
+        DrupalCoffee.isItemSelected = false;
 
         var autocomplete_data_element = 'ui-autocomplete';
 
@@ -61,12 +62,15 @@
               source: DrupalCoffee.dataset,
               focus: function (event, ui) {
                 // Prevents replacing the value of the input field
+                DrupalCoffee.isItemSelected = true;
                 event.preventDefault();
+              },
+              'change': function(event, ui) {
+                DrupalCoffee.isItemSelected = false;
               },
               select: function (event, ui) {
                 DrupalCoffee.redirect(ui.item.value, event.metaKey);
                 event.preventDefault();
-
                 return false;
               },
               delay: 0,
@@ -76,8 +80,8 @@
             $autocomplete.data(autocomplete_data_element)._renderItem = function (ul, item) {
               // strip the basePath when displaying the link description
               var description = item.value;
-              if( item.value.indexOf( drupalSettings.path.basePath ) === 0 ){
-                  description = item.value.substring( drupalSettings.path.basePath.length );
+              if(item.value.indexOf(drupalSettings.path.basePath) === 0){
+                  description = item.value.substring(drupalSettings.path.basePath.length);
               }
               return  $('<li></li>')
                 .data('item.autocomplete', item)
@@ -98,15 +102,16 @@
             DrupalCoffee.form.keydown(function(event) {
               if (event.keyCode == 13) {
                 var openInNewWindow = false;
-                event.preventDefault();
 
                 if (event.metaKey) {
                   openInNewWindow = true;
                 }
 
-                var $firstItem = jQuery(DrupalCoffee.results).find('li:first').data('item.autocomplete');
-                if (typeof $firstItem === 'object') {
-                  DrupalCoffee.redirect($firstItem.value, openInNewWindow);
+                if (!DrupalCoffee.isItemSelected) {
+                    var $firstItem = $(DrupalCoffee.results).find('li:first').data('item.autocomplete');
+                    if (typeof $firstItem === 'object') {
+                        DrupalCoffee.redirect($firstItem.value, openInNewWindow);
+                    }
                 }
               }
             });
