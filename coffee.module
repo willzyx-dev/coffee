@@ -42,10 +42,10 @@ function coffee_toolbar() {
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'link',
-      '#title' => 'Coffee',
+      '#title' => 'Go to',
       '#href' => '',
       '#attributes' => array(
-        'title' => t('Coffee, use alt+d to start Coffee'),
+        'title' => t('Use alt+d to start Coffee and search for a page to go to '),
         'class' => array('toolbar-icon', 'toolbar-icon-coffee'),
       ),
     ),
