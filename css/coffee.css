@@ -164,12 +164,9 @@
   font-family: sans-serif;
 }
 
-.toolbar-bar .toolbar-icon-coffee:before,
-.toolbar-bar .toolbar-icon-coffee.active:before {
+.toolbar .toolbar-bar .toolbar-icon-coffee:before,
+.toolbar .toolbar-bar .toolbar-icon-coffee.active:before {
     background-image: url("../images/icons/bebebe/coffee.svg");
-}
-.toolbar-icon-coffee:before{
-    width: 24px !important;
 }
 
 #coffee-q{
