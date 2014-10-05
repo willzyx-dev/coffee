@@ -111,6 +111,7 @@
                     var $firstItem = $(DrupalCoffee.results).find('li:first').data('item.autocomplete');
                     if (typeof $firstItem === 'object') {
                         DrupalCoffee.redirect($firstItem.value, openInNewWindow);
+                        event.preventDefault();
                     }
                 }
               }
