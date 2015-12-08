@@ -33,7 +33,7 @@
 
   Drupal.behaviors.coffee = {
     attach: function () {
-      $('body').once('coffee', function () {
+      $('body').once('coffee').each(function () {
         var body = $(this);
         DrupalCoffee.bg.appendTo(body).hide();
         DrupalCoffee.wrapper.appendTo('body').addClass('hide-form');
@@ -200,4 +200,4 @@
 
   DrupalCoffee.field = $('<input id="coffee-q" type="text" autocomplete="off" />');
 
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);
