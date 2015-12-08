@@ -5,6 +5,7 @@
  * includes an example of hook_coffee_commands().
  */
 
+use Drupal\Core;
 use Drupal\Core\Url;
 
 /**
@@ -38,3 +39,4 @@ function coffee_coffee_commands() {
 
   return $commands;
 }
+
