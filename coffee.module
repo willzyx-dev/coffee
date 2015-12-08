@@ -5,7 +5,7 @@
  * Coffee primary module file.
  */
 
-use Drupal\Core;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_page_attachments().
@@ -29,30 +29,36 @@ function coffee_hook_info() {
   return $hooks;
 }
 
-
 /**
  * Implements hook_toolbar().
  *
  * @todo Coffee specific icon.
  */
 function coffee_toolbar() {
-  $items['coffee'] = array(
-    '#type' => 'toolbar_item',
-    'tab' => array(
-      '#type' => 'link',
-      '#title' => 'Go to',
-      '#href' => '',
-      '#attributes' => array(
-        'title' => t('Use alt+d to start Coffee and search for a page to go to '),
-        'class' => array('toolbar-icon', 'toolbar-icon-coffee'),
-      ),
-    ),
-    '#attached' => array(
-      'library' => array(
-        'coffee/drupal.coffee',
-      ),
-    ),
-  );
+  $items['coffee'] = [
+    '#cache' => [
+      'contexts' => ['user.permissions'],
+    ],
+  ];
+
+  if (\Drupal::currentUser()->hasPermission('access coffee')) {
+    $items['coffee'] += [
+      '#weight' => 999,
+      '#type' => 'toolbar_item',
+      'tab' => [
+        '#type' => 'link',
+        '#title' => t('Go to'),
+        '#url' => Url::fromRoute('<none>'),
+        '#attributes' => [
+          'title' => t('Use alt+d to start Coffee and search for a page to go to '),
+          'class' => ['toolbar-icon', 'toolbar-icon-coffee'],
+        ],
+      ],
+      '#attached' => [
+        'library' => ['coffee/drupal.coffee'],
+      ],
+    ];
+  }
 
   return $items;
 }

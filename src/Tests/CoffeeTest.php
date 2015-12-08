@@ -105,4 +105,22 @@ class CoffeeTest extends WebTestBase {
     $this->assertNoRaw('modules/coffee/js/coffee.js');
   }
 
+  /**
+   * Tests that the toolbar integration works properly.
+   */
+  public function testCoffeeToolbarIntegration() {
+    \Drupal::service('module_installer')->install(['toolbar']);
+    $tab_xpath = '//nav[@id="toolbar-bar"]//div/a[contains(@class, "toolbar-icon-coffee")]';
+
+    $toolbar_user = $this->drupalCreateUser(['access toolbar']);
+    $this->drupalLogin($toolbar_user);
+    $this->assertRaw('id="toolbar-administration"');
+    $this->assertFalse($this->xpath($tab_xpath), 'Not found the Coffee toolbar tab.');
+
+    $coffee_toolbar_user = $this->drupalCreateUser(['access toolbar', 'access coffee']);
+    $this->drupalLogin($coffee_toolbar_user);
+    $this->assertRaw('id="toolbar-administration"');
+    $this->assertEqual(count($this->xpath($tab_xpath)), 1, 'Found the Coffee toolbar tab.');
+  }
+
 }
