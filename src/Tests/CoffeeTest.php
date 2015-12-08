@@ -83,4 +83,26 @@ class CoffeeTest extends WebTestBase {
     $this->assertEqual($expected, $config, 'The configuration options have been properly saved');
   }
 
+  /**
+   * Tests that the coffee assets are loaded properly.
+   */
+  public function testCoffeeAssets() {
+    // Ensure that the coffee assets are not loaded for users without the
+    // adequate permission.
+    $this->drupalGet('');
+    $this->assertNoRaw('modules/coffee/js/coffee.js');
+
+    // Ensure that the coffee assets are loaded properly for users with the
+    // adequate permission.
+    $this->drupalLogin($this->coffeeUser);
+    $this->drupalGet('');
+    $this->assertRaw('modules/coffee/js/coffee.js');
+
+    // Ensure that the coffee assets are not loaded for users without the
+    // adequate permission.
+    $this->drupalLogin($this->webUser);
+    $this->drupalGet('');
+    $this->assertNoRaw('modules/coffee/js/coffee.js');
+  }
+
 }

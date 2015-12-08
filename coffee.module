@@ -8,13 +8,11 @@
 use Drupal\Core;
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  */
-function coffee_page_build(&$page) {
-  // Access check.
-  $account = \Drupal::currentUser();
-  if ($account->hasPermission('access coffee')) {
-    $page['#attached']['library'][] = 'coffee/drupal.coffee';
+function coffee_page_attachments(&$attachments) {
+  if (\Drupal::currentUser()->hasPermission('access coffee')) {
+    $attachments['#attached']['library'][] = 'coffee/drupal.coffee';
   }
 }
 
